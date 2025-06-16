@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Covenant Match - Service Offline</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a0a2e 50%, #2e1065 100%);
+            color: #e0e0e0;
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Animated background particles */
+        .background-particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .particle {
+            position: absolute;
+            background: rgba(147, 112, 219, 0.15);
+            border-radius: 50%;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .particle:nth-child(1) { width: 4px; height: 4px; left: 10%; animation-delay: 0s; }
+        .particle:nth-child(2) { width: 6px; height: 6px; left: 20%; animation-delay: 1s; }
+        .particle:nth-child(3) { width: 3px; height: 3px; left: 35%; animation-delay: 2s; }
+        .particle:nth-child(4) { width: 5px; height: 5px; left: 50%; animation-delay: 3s; }
+        .particle:nth-child(5) { width: 4px; height: 4px; left: 65%; animation-delay: 4s; }
+        .particle:nth-child(6) { width: 6px; height: 6px; left: 80%; animation-delay: 5s; }
+        .particle:nth-child(7) { width: 3px; height: 3px; left: 90%; animation-delay: 2.5s; }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { transform: translateY(-100px) rotate(360deg); opacity: 0; }
+        }
+
+        .container {
+            position: relative;
+            z-index: 2;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+
+        .header {
+            margin-bottom: 3rem;
+        }
+
+        .logo {
+            font-size: 3rem;
+            font-weight: bold;
+            background: linear-gradient(45deg, #9370db, #6a5acd, #8a2be2, #9932cc);
+            background-size: 200% 200%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: gradientShift 3s ease-in-out infinite;
+            margin-bottom: 1rem;
+            text-shadow: 0 0 20px rgba(147, 112, 219, 0.4);
+        }
+
+        @keyframes gradientShift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            color: #b0b0b0;
+            margin-bottom: 2rem;
+        }
+
+        .main-content {
+            background: rgba(0, 0, 0, 0.4);
+            border: 2px solid rgba(147, 112, 219, 0.4);
+            border-radius: 15px;
+            padding: 3rem;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            max-width: 800px;
+            margin-bottom: 2rem;
+        }
+
+        .status-badge {
+            display: inline-block;
+            background: linear-gradient(45deg, #ff6b6b, #ee5a5a);
+            color: white;
+            padding: 0.5rem 1.5rem;
+            border-radius: 25px;
+            font-weight: bold;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
+        }
+
+        .message-title {
+            font-size: 2.5rem;
+            color: #87ceeb;
+            margin-bottom: 1.5rem;
+            text-shadow: 0 0 10px rgba(135, 206, 235, 0.5);
+        }
+
+        .message-content {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: #d0d0d0;
+            margin-bottom: 2rem;
+        }
+
+        .message-content p {
+            margin-bottom: 1rem;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .stat-card {
+            background: rgba(135, 206, 235, 0.1);
+            border: 1px solid rgba(135, 206, 235, 0.3);
+            border-radius: 10px;
+            padding: 1.5rem;
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #87ceeb;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: #b0b0b0;
+            font-size: 0.9rem;
+        }
+
+        .contact-section {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(135, 206, 235, 0.2);
+            border-radius: 10px;
+            padding: 2rem;
+            margin-top: 2rem;
+        }
+
+        .contact-title {
+            font-size: 1.5rem;
+            color: #87ceeb;
+            margin-bottom: 1rem;
+        }
+
+        .contact-email {
+            font-size: 1.1rem;
+            color: #4682b4;
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border: 1px solid rgba(135, 206, 235, 0.3);
+            border-radius: 5px;
+            display: inline-block;
+            transition: all 0.3s ease;
+        }
+
+        .contact-email:hover {
+            background: rgba(135, 206, 235, 0.1);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(135, 206, 235, 0.2);
+        }
+
+        .footer {
+            margin-top: 3rem;
+            color: #808080;
+            font-size: 0.9rem;
+        }
+
+        .nightreign-tribute {
+            font-style: italic;
+            color: #87ceeb;
+            margin-top: 1rem;
+            opacity: 0.8;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+            
+            .logo {
+                font-size: 2rem;
+            }
+            
+            .message-title {
+                font-size: 2rem;
+            }
+            
+            .main-content {
+                padding: 2rem;
+            }
+            
+            .stats {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Subtle glow effect for important elements */
+        .glow {
+            animation: pulse 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes pulse {
+            from { box-shadow: 0 0 20px rgba(135, 206, 235, 0.2); }
+            to { box-shadow: 0 0 30px rgba(135, 206, 235, 0.4); }
+        }
+    </style>
+</head>
+<body>
+    <div class="background-particles">
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+    </div>
+
+    <div class="container">
+        <div class="header">
+            <h1 class="logo">Covenant Match</h1>
+            <p class="subtitle">Nightreign Matchmaking Service</p>
+        </div>
+
+        <div class="main-content glow">
+            <div class="status-badge">SERVICE OFFLINE</div>
+            
+            <h2 class="message-title">The Covenant Has Ended</h2>
+            
+            <div class="message-content">
+                <p>Fellow Nightfarers,</p>
+                
+                <p>After careful consideration, I have made the difficult decision to take Covenant Match offline. Despite my best efforts to build a thriving community for Nightreign players, I was unable to achieve the growth needed to sustain the service.</p>
+                
+                <p>Building Covenant Match was an incredible journey - every line of code, every feature implemented, and every moment spent crafting this matchmaking experience was truly enjoyable. However, the challenge of marketing and promoting the platform proved to be beyond my current capabilities.</p>
+                
+                <p>To preserve resources and focus on future endeavors, I am shutting down the active service. This static page will remain as a memorial to what I built.</p>
+            </div>
+
+            <div class="stats">
+                <div class="stat-card">
+                    <div class="stat-number">135</div>
+                    <div class="stat-label">Brave Souls Registered</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">∞</div>
+                    <div class="stat-label">Memories Created</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">1</div>
+                    <div class="stat-label">Dream Pursued</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="contact-section">
+            <h3 class="contact-title">Believe in the Vision?</h3>
+            <p style="margin-bottom: 1rem; color: #b0b0b0;">
+                If you think Covenant Match has potential and should return to serve the Nightreign community, 
+                we'd love to hear from you. Perhaps together we can forge a new path forward.
+            </p>
+            <a href="mailto:akri.covenant@gmail.com" class="contact-email">
+                Contact Me
+            </a>
+        </div>
+
+        <div class="footer">
+            <p>&copy; 2025 Covenant Match. Built with passion for the Nightreign community.</p>
+            <p class="nightreign-tribute">
+                "In the darkness of Nightreign, even the smallest light can guide the way."
+            </p>
+        </div>
+    </div>
+</body>
+</html>
